@@ -22,19 +22,16 @@ const clerkWebhooks= async (req,res)=>{
             image:data.image_url,
         }
         switch(type){
-            case "use.created":{
+            case "user.created":{
                 await User.create(userData);
                 break;
             }
-            case "use.created":{
-                await User.create(userData);
-                break;
-            }
-            case "use.updated":{
+            
+            case "user.updated":{
                 await User.findByIdAndUpdate(data.id,userData);
                 break;
             }
-            case "use.deleted":{
+            case "user.deleted":{
                 await User.findByIdAndDelete(data.id);
                 break;
             }
