@@ -10,11 +10,15 @@ connectDB();
 const app = express();
 app.use(cors());
 
-// ✅ RAW body ONLY for Clerk webhook
-app.use(express.json());
-app.use(clerkMiddleware());
+app.use(clerkMiddleware()); 
 
-app.use("/api/clerk",clerkWebhooks)
+app.post(
+  "/api/clerk/webhook",
+  express.raw({ type: "application/json" }),
+  clerkWebhooks
+);
+
+app.use(express.json());
 
 app.get("/", (req, res) => res.send("API is working"));
 
