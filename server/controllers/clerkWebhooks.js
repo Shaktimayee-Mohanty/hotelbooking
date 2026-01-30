@@ -20,7 +20,6 @@ const clerkWebhooks = async (req, res) => {
       email: data.email_addresses[0].email_address,
       username: data.first_name || data.username || "user", // ✅ safe
       image: data.image_url,
-      recentSearchedCities: [],
     };
 
     switch (type) {
