@@ -16,7 +16,7 @@ app.post(
   clerkWebhooks
 );
 
-// normal json for other routes
+// normal json for rest
 app.use(express.json());
 app.use(clerkMiddleware());
 

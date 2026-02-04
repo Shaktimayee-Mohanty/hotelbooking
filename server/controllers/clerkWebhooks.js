@@ -11,8 +11,7 @@ const clerkWebhooks = async (req, res) => {
       "svix-signature": req.headers["svix-signature"],
     };
 
-    // ✅ use RAW body
-    const payload = req.body.toString();
+    const payload = req.body.toString(); // RAW body
     const evt = whook.verify(payload, headers);
 
     const { data, type } = evt;
@@ -37,7 +36,6 @@ const clerkWebhooks = async (req, res) => {
     }
 
     res.status(200).json({ success: true });
-
   } catch (error) {
     console.log("Webhook error:", error.message);
     res.status(400).json({ success: false, message: error.message });
