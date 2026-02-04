@@ -18,30 +18,23 @@ const clerkWebhooks = async (req, res) => {
     const userData = {
       _id: data.id,
       email: data.email_addresses[0].email_address,
-      username: data.first_name || data.username || "user", // ✅ safe
+      username: data.first_name + " " + data.last_name , // ✅ safe
       image: data.image_url,
     };
 
     switch (type) {
       case "user.created": {
         await User.create(userData);
-        console.log("User created in DB");
         break;
       }
 
       case "user.updated": {
-        await User.findByIdAndUpdate(
-          data.id,
-          userData,
-          { new: true, upsert: true }
-        );
-        console.log("User updated in DB");
+        await User.findByIdAndUpdate(data.id,userData);
         break;
       }
 
       case "user.deleted": {
         await User.findByIdAndDelete(data.id);
-        console.log("User deleted from DB");
         break;
       }
 
@@ -49,11 +42,11 @@ const clerkWebhooks = async (req, res) => {
         break;
     }
 
-    res.status(200).json({ success: true, message: "Webhook received" });
+    res.json({ success: true, message: "Webhook received" })
 
   } catch (error) {
     console.log("Webhook error:", error.message);
-    res.status(400).json({ success: false, message: error.message });
+    res.json({ success: false, message: error.message });
   }
 };
 
