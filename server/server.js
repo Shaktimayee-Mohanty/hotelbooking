@@ -19,7 +19,7 @@ app.post(
 app.use(express.json());
 app.use(clerkMiddleware());
 
-app.get("/", (req, res) => res.send("API is working"));
+app.get("/",(req, res) => res.send("API is working"));
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () =>
