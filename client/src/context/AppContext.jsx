@@ -22,10 +22,12 @@ axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL;
 
     const fetchUser=async()=>{
         try {
-            const {data} = await axios.get("/api/user",{headers:{Authorization:`Bearer ${await getToken()}`}})
+            const token = await getToken();
+
+            const {data} = await axios.get("/api/user",{headers:{Authorization:`Bearer ${token}`}})
             if(data.success){
-                setIsOwner(data.user.role==="hotelowner")
-                setSearchedCities(data.recentSearchedcities)
+                setIsOwner(data.role==="hotelOwner")
+                setSearchedCities(data.recentSearchedCities || []);
             }else{
                 setTimeout(() => {
                     fetchUser();
@@ -52,7 +54,8 @@ axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL;
         setShowHotelReg,
         searchedCities,
         setSearchedCities,
-        axios
+        axios,
+        getToken
     }
     return (
         <AppContext.Provider value={value}>

@@ -7,14 +7,21 @@ import clerkWebhooks from "./controllers/clerkWebhooks.js";
 import userRouter from "./routes/userRoutes.js";
 import hotelRouter from "./routes/hotelRoutes.js";
 import connectCloudinary from "./config/cloudinary.js";
-import roomRouter from "./routes/roomRoutes.js"
+import roomRouter from "./routes/roomRoutes.js";
 import bookingRouter from "./routes/bookingRoutes.js";
+import User from "./models/User.js";
+
 connectDB();
 connectCloudinary();
 
 const app = express();
+
 app.use(cors());
 
+// ✅ Clerk middleware (ONLY THIS ONE)
+app.use(clerkMiddleware());
+
+// ✅ Webhook (keep raw BEFORE json)
 app.post(
   "/api/clerk/webhook",
   express.raw({ type: "application/json" }),
@@ -22,16 +29,19 @@ app.post(
 );
 
 app.use(express.json());
-app.use(clerkMiddleware());
 
-app.get("/",(req, res) => res.send("API is working"));
-app.use('/api/user',userRouter);
-app.use('/api/hotels',hotelRouter);
-app.use('/api/rooms',roomRouter);
-app.use('/api/bookings',bookingRouter);
+app.get("/", (req, res) => res.send("API is working"));
 
+app.use("/api/user", userRouter);
+app.use("/api/hotels", hotelRouter);
+app.use("/api/rooms", roomRouter);
+app.use("/api/bookings", bookingRouter);
 
-
+app.get("/test-db", async (req, res) => {
+  const users = await User.find();
+  console.log("📦 USERS IN DB:", users);
+  res.json(users);
+});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () =>
