@@ -26,8 +26,8 @@ axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL;
 
             const {data} = await axios.get("/api/user",{headers:{Authorization:`Bearer ${token}`}})
             if(data.success){
-                setIsOwner(data.role==="hotelOwner")
-                setSearchedCities(data.recentSearchedCities || []);
+                setIsOwner(data.role==="hotelowner")
+                setSearchedCities(data.recentSearchedCities );
             }else{
                 setTimeout(() => {
                     fetchUser();

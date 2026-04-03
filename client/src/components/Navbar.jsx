@@ -64,7 +64,7 @@ const Navbar = () => {
                 ))}
                 { user && (
                     <button className={`border px-4 py-1 text-sm font-light rounded-full cursor-pointer ${isScrolled ? 'text-black' : 'text-white'} transition-all`} onClick={()=> isOwner ? navigate ('/owner') : setShowHotelReg(true)}>
-                    {isOwner ? "Dashboard" : "Register Hotel"}
+                    {isOwner ? "Dashboard" : "List Your Hotel"}
                 </button>
                 )
                 }
@@ -85,9 +85,7 @@ const Navbar = () => {
                     </button>)
                 }
 
-                <button onClick={openSignIn} className={`px-8 py-2.5 rounded-full ml-4 transition-all duration-500 ${isScrolled ? "text-white bg-black" : "bg-white text-black"}`}>
-                    Login
-                </button>
+               
             </div>
 
             {/* Mobile Menu Button */}
@@ -114,7 +112,7 @@ const Navbar = () => {
                 ))}
 
                 {user && <button className="border px-4 py-1 text-sm font-light rounded-full cursor-pointer transition-all"  onClick={()=> isOwner ? navigate ('/owner') : setShowHotelReg(true)}>
-                   {isOwner ? "Dashboard" : "Register Hotel"}
+                   {isOwner ? "Dashboard" : "List Your Hotel"}
                 </button>}
 
                 {!user && <button onClick={openSignIn} className="bg-black text-white px-8 py-2.5 rounded-full transition-all duration-500">

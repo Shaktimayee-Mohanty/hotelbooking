@@ -24,8 +24,8 @@ const App = () => {
       <div className='min-h-[70vh]'>
         <Routes>
           <Route path='/' element={<Home />} />
-          <Route path='/rooms' element={<AddRoom />} />        
-          <Route path='/rooms/:id' element={<RoomDetails />} />
+           <Route path='/rooms' element={<AddRoom />} />
+          <Route path='/rooms/:id' element={<RoomDetails/>} />
           <Route path='/my-bookings' element={<Mybookings />} /> 
           <Route path='/owner' element={<Layout />} >
              <Route index element={<Dashboard />} />
