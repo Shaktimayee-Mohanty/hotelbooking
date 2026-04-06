@@ -19,6 +19,22 @@ axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL;
     const [isOwner,setIsOwner] = useState(false);
     const [showHotelReg,setShowHotelReg] = useState(false);
     const [searchedCities,setSearchedCities] = useState([]);
+    const [rooms ,setRooms] = useState([]);
+
+    const fetchRooms = async()=>{
+        try {
+            const {data} = await axios.get('/api/rooms')
+            console.log("API RESPONSE:", data)
+            if(data.success){
+                setRooms(data.rooms)
+            }else{
+                toast.error('Failed to fetch rooms:', data.message)
+            }
+        } catch (error) {
+            toast.error('Error fetching rooms:', error)
+        }
+    }
+
 
     const fetchUser=async()=>{
         try {
@@ -27,7 +43,7 @@ axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL;
             const {data} = await axios.get("/api/user",{headers:{Authorization:`Bearer ${token}`}})
             if(data.success){
                 setIsOwner(data.role==="hotelowner")
-                setSearchedCities(data.recentSearchedCities );
+                setSearchedCities(data.recentSearchedCities || []);
             }else{
                 setTimeout(() => {
                     fetchUser();
@@ -43,6 +59,10 @@ axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL;
         }
     }, [user])
 
+    useEffect(()=>{
+        fetchRooms();
+    },[])
+
 
     const value = {
         currency,
@@ -55,7 +75,9 @@ axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL;
         searchedCities,
         setSearchedCities,
         axios,
-        getToken
+        getToken,
+        rooms,
+        setRooms
     }
     return (
         <AppContext.Provider value={value}>

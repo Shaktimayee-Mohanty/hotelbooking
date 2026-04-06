@@ -1,5 +1,7 @@
 import Booking from "../models/Booking.js";
 import Room from "../models/Room.js";
+import Hotel from "../models/Hotel.js";
+import transporter from "../config/nodemailer.js";
 
 const checkAvailability = async ({checkInDate, checkOutDate, room}) => {
     try{
@@ -58,9 +60,37 @@ export const createBooking = async (req, res) => {
                     guests:+guests,
                     checkInDate,
                     checkOutDate,
-                    guests,
+                    guests:+guests,
                     totalPrice
                 });
+
+                const mailOptions = {
+                    from: process.env.SENDER_EMAIL,
+                    to: req.user.email,
+                    subject: "Booking Confirmation",
+                    html: `
+                         <h2>Your Booking Details</h2>
+                         <p>Dear ${req.user.username},</p>
+                            <p>Thank you for your booking! Here are your booking details:</p>
+                            <ul>
+                                <li><strong>Booking ID:</strong> ${booking._id}</li>
+                                <li><strong>Hotel Name:</strong> ${roomData.hotel.name}</li>
+                                <li><strong>Location:</strong> ${roomData.hotel.address}</li>
+                                <li><strong>Check-in Date:</strong> ${checkInDate}</li>
+                                <li><strong>Check-out Date:</strong> ${checkOutDate}</li>
+                                <li><strong>Total Price:</strong> ${process.env.CURRENCY || '$'}${booking.totalPrice}/night</li>
+                            </ul>
+                            <p>We look forward to hosting you!</p>
+                            <p>If you have any questions or need assistance, please feel free to contact us.</p>
+                            <p>Best regards,</p>
+                            <p>The Hotel Booking Team</p>
+                       
+                `
+                };
+
+                await transporter.sendMail(mailOptions);
+
+
                 res.json({ success:true, message:"Booking created successfully" });
             } catch (error) {
                 console.error("Error creating booking:", error);
@@ -73,10 +103,13 @@ export const createBooking = async (req, res) => {
 export const getUserBookings = async (req, res) => {
     try{
         const user=req.user._id;
-        const bookings = (await Booking.find({ user }).populate("room hotel")).sort({createdAt:-1})
+        const bookings = await Booking.find({ user })
+        .populate("room hotel")
+        .sort({createdAt:-1});
         res.json({ success:true, bookings });
-    } catch (error) {
-         res.json({ success:false,message:"Failed to fetch bookings" });
+    }catch (error) {
+        console.error("Booking fetch error:", error)
+       res.json({ success:false,message:"Failed to fetch bookings" });
     }
 }
 
